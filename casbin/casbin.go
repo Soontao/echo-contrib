@@ -48,6 +48,7 @@ import (
 	"github.com/casbin/casbin"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	"github.com/ipfans/echo-session"
 )
 
 type (
@@ -100,9 +101,13 @@ func MiddlewareWithConfig(config Config) echo.MiddlewareFunc {
 
 // GetUserName gets the user name from the request.
 // Currently, only HTTP basic authentication is supported
-func (a *Config) GetUserName(c echo.Context) string {
-	username, _, _ := c.Request().BasicAuth()
-	return username
+func (a *Config) GetUserName(c echo.Context) (username string) {
+	sess := session.Default(c)
+	tmp := sess.Get("username")
+	if tmp != nil{
+		username = tmp.(string)
+	}
+	return
 }
 
 // CheckPermission checks the user/method/path combination from the request.
