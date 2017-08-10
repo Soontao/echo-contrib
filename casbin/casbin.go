@@ -46,9 +46,9 @@ package casbin
 
 import (
 	"github.com/casbin/casbin"
+	"github.com/ipfans/echo-session"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
-	"github.com/ipfans/echo-session"
 )
 
 type (
@@ -104,8 +104,10 @@ func MiddlewareWithConfig(config Config) echo.MiddlewareFunc {
 func (a *Config) GetUserName(c echo.Context) (username string) {
 	sess := session.Default(c)
 	tmp := sess.Get("username")
-	if tmp != nil{
+	if tmp != nil {
 		username = tmp.(string)
+	} else {
+		username = "casbin_anonymous"
 	}
 	return
 }
